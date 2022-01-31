@@ -1,63 +1,48 @@
-<!-- This should be the location of the title of the repository, normally the short name -->
-# repo-template
+# CSM-Rexx-Collection
 
-<!-- Build Status, is a great thing to have at the top of your repository, it shows that you take your CI/CD as first class citizens -->
-<!-- [![Build Status](https://travis-ci.org/jjasghar/ibm-cloud-cli.svg?branch=master)](https://travis-ci.org/jjasghar/ibm-cloud-cli) -->
-
-<!-- Not always needed, but a scope helps the user understand in a short sentance like below, why this repo exists -->
 ## Scope
 
-The purpose of this project is to provide a template for new open source repositories.
+The purpose of this project is to provide Rexx examples to utilize IBM Copy Services Manager. Most examples focus on Rexx on IBM z, but some may be used also with other Rexx distributions on various platforms. 
 
-<!-- A more detailed Usage or detailed explaination of the repository here -->
-## Usage
+---
 
-This repository contains some example best practices for open source repositories:
+# Rexx Collection overview
 
-* [LICENSE](LICENSE)
-* [README.md](README.md)
-* [CONTRIBUTING.md](CONTRIBUTING.md)
-* [MAINTAINERS.md](MAINTAINERS.md)
-<!-- A Changelog allows you to track major changes and things that happen, https://github.com/github-changelog-generator/github-changelog-generator can help automate the process -->
-* [CHANGELOG.md](CHANGELOG.md)
+## Rexx-CSMCLI-4-Site-Practice-Example
 
-> These are optional
+The [Rexx-CSMCLI-4-Site-Practice-Example](https://github.com/IBM/CSM-Rexx-Collection/Rexx-CSMCLI-4-Site-Practice-Example) provides a Rexx executable to create a Practice copy for DR tests in a 4 Site Metro Mirror - Global Mirror session. It is the script that is documented in the White Paper [IBM Copy Services Manager Session automation.](https://www.ibm.com/support/pages/ibm-copy-services-manager-session-automation)
 
-<!-- The following are OPTIONAL, but strongly suggested to have in your repository. -->
-* [dco.yml](.github/dco.yml) - This enables DCO bot for you, please take a look https://github.com/probot/dco for more details.
-* [travis.yml](.travis.yml) - This is a example `.travis.yml`, please take a look https://docs.travis-ci.com/user/tutorial/ for more details.
+## Rexx-Framework-CSM-Rest-Api
 
-These may be copied into a new or existing project to make it easier for developers not on a project team to collaborate.
+The [z/OS Rexx framework for CSM Rest API](https://github.com/IBM/CSM-Rexx-Collection/Rexx-Framework-CSM-Rest-Api) was developed to demonstrate the 
+z/OS TSO Web Enablement Toolkit capabilities in a simplified manner for 
+utilizing the IBM Copy Services Manager Rest API interface. It enables z 
+System Programmers and Storage Administrators to interact with IBM Copy 
+Services Manager from a z platform without installing the CSM CLI for z/OS. 
 
-<!-- A notes section is useful for anything that isn't covered in the Usage or Scope. Like what we have below. -->
-## Notes
+---
 
-**NOTE: While this boilerplate project uses the Apache 2.0 license, when
-establishing a new repo using this template, please use the
-license that was approved for your project.**
+# Notes
 
-**NOTE: This repository has been configured with the [DCO bot](https://github.com/probot/dco).
-When you set up a new repository that uses the Apache license, you should
-use the DCO to manage contributions. The DCO bot will help enforce that.
-Please contact one of the IBM GH Org stewards.**
+- This repository has been configured with the [DCO bot](https://github.com/probot/dco) to simplify licensing with contributions.
 
-<!-- Questions can be useful but optional, this gives you a place to say, "This is how to contact this project maintainers or create PRs -->
-If you have any questions or issues you can create a new [issue here][issues].
+- If you have any questions or issues you can create a new [issue here](https://github.com/IBM/CSM-Rexx-Collection/issues).
 
-Pull requests are very welcome! Make sure your patches are well tested.
-Ideally create a topic branch for every separate change you make. For
-example:
+- Pull requests are very welcome! Make sure your patches are well tested.
+  Ideally create a topic branch for every separate change you make. For
+  example:
+  
+  1. Fork the repo
+  2. Create your feature branch (`git checkout -b my-new-feature`)
+  3. Commit your changes (`git commit -am 'Added some feature'`)
+  4. Push to the branch (`git push origin my-new-feature`)
+  5. Create new Pull Request
 
-1. Fork the repo
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Added some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+---
 
-## License
+# License
 
-All source files must include a Copyright and License header. The SPDX license header is 
-preferred because it can be easily scanned.
+All source files must include a Copyright and License header. The SPDX license header is preferred because it can be easily scanned.
 
 If you would like to see the detailed LICENSE click [here](LICENSE).
 
@@ -67,11 +52,18 @@ If you would like to see the detailed LICENSE click [here](LICENSE).
 # SPDX-License-Identifier: Apache2.0
 #
 ```
-## Authors
 
-Optionally, you may include a list of authors, though this is redundant with the built-in
-GitHub list of contributors.
+The examples in this project are licensed under the Apache License 2.0. 
+You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0  
 
-- Author: New OpenSource IBMer <new-opensource-ibmer@ibm.com>
+It is a permissive license whose main conditions require preservation of 
+copyright and license notices. Contributors provide an express grant of 
+patent rights. Licensed works, modifications, and larger works may be 
+distributed under different terms and without source code.  
 
-[issues]: https://github.com/IBM/repo-template/issues/new
+The examples are provided for tutorial purposes only. A complete handling 
+of error conditions has not been shown or attempted, and the programs have 
+not been submitted to formal IBM testing. The programs are distributed on an 
+'AS IS' basis without any warranties either expressed or implied.
+
+Copyright IBM Corporation  2021

@@ -1,3 +1,5 @@
 # MAINTAINERS
 
-Christopher Ferris - chrisfer@us.ibm.com
+Thomas Luther - tluther@de.ibm.com
+
+Randy Blea - blead@us.ibm.com
