@@ -10,11 +10,11 @@ The purpose of this project is to provide Rexx examples to utilize IBM Copy Serv
 
 ## Rexx-CSMCLI-4-Site-Practice-Example
 
-The [Rexx-CSMCLI-4-Site-Practice-Example](https://github.com/IBM/CSM-Rexx-Collection/Rexx-CSMCLI-4-Site-Practice-Example) provides a Rexx executable to create a Practice copy for DR tests in a 4 Site Metro Mirror - Global Mirror session. It is the script that is documented in the White Paper [IBM Copy Services Manager Session automation.](https://www.ibm.com/support/pages/ibm-copy-services-manager-session-automation)
+The [Rexx-CSMCLI-4-Site-Practice-Example](https://github.com/IBM/CSM-Rexx-Collection/tree/master/Rexx-CSMCLI-4-Site-Practice-Example) provides a Rexx executable to create a Practice copy for DR tests in a 4 Site Metro Mirror - Global Mirror session. It is the script that is documented in the White Paper [IBM Copy Services Manager Session automation.](https://www.ibm.com/support/pages/ibm-copy-services-manager-session-automation)
 
 ## Rexx-Framework-CSM-Rest-Api
 
-The [z/OS Rexx framework for CSM Rest API](https://github.com/IBM/CSM-Rexx-Collection/Rexx-Framework-CSM-Rest-Api) was developed to demonstrate the 
+The [z/OS Rexx framework for CSM Rest API](https://github.com/IBM/CSM-Rexx-Collection/tree/master/Rexx-Framework-CSM-Rest-Api) was developed to demonstrate the 
 z/OS TSO Web Enablement Toolkit capabilities in a simplified manner for 
 utilizing the IBM Copy Services Manager Rest API interface. It enables z 
 System Programmers and Storage Administrators to interact with IBM Copy 
