@@ -1,0 +1,88 @@
+//*Jobcard
+//*Jobcard
+//*----------------------------------------------------
+//* Execute the REXX exec under a TSO environment
+//*----------------------------------------------------
+// SET  EXEDSN=#HLQ.CSM.CNTL                <== UPDATE
+//*----------------------------------------------------
+//RUN      EXEC PGM=IKJEFT01
+//SYSEXEC  DD DSN=&EXEDSN,DISP=SHR
+//SYSOUT   DD SYSOUT=*
+//SYSPRINT DD SYSOUT=*
+//SYSTSPRT DD SYSOUT=*
+//* Concatenate multple parameter lines with - at end of line
+//SYSTSIN  DD *
+ %CSMCLIWR                                                  -
+ -server servername                                         -
+ -help csmcli
+/*
+//INPUT    DD *
+/*
+//
+
+//* Wrapper program execution parameter description
+-debug lvl
+ Enable debug mode for the wrapper program. If no level specified, it
+ will be set to 1, otherwise it will be set to given value.
+
+//* CSMCLI program execution parameters passed on by wrapper
+-help | -h | -? (command_name)
+ Displays help for the specified CLI command. If you do not specify a
+ command name, this option displays help for the csmcli command. If you
+ specify more parameters and arguments other than a command name, those
+ parameters and arguments are ignored.
+
+-overview
+ Displays overview information about using the CLI program.
+
+-noinfo
+ Removes the copyright, version, and build information when you start
+ the csmcli.
+
+-saf
+ Queries the SAF facility defined in repcli.properties to optionally
+ bypass the password prompt and use the user that is currently logged
+ into the OMVS shell or user specified in a BPXBATCH job calling the
+ CLI. The access of a user is validated as a member of the facility if
+ all prerequisite configurations were completed and expected
+ permissions were set correctly.
+
+-username user_name
+ Specifies the Copy Services Manager user name with which you want to
+ log in.
+
+-password password
+ Specifies the password for the Copy Services Manager user name with
+ which you want to log in.
+ Important: When you specify this option, the password is displayed as
+ plain text. Using this form of authentication can cause a security
+ exposure. If you specify a user name but not a password, and Copy
+ Services Manager does not find the password in an authentication file,
+ you are prompted for the password. This may fail with the wrapper
+ program.
+
+-server domain_name ip_address
+ Sets the domain name or IP address of the Copy Services Manager server
+ to which you want to connect.
+ Remember: The server domain name or IP address is used only during
+ this CLI session.
+
+-port port
+ Sets the port number to be used by the CLI program to connect to the
+ Copy Services Manager server. The default value is 5110.
+ Remember:
+ The port number is used only during this CLI session.
+
+-script file_name
+ Runs the set of command strings in the specified file outside of an
+ interactive CLI session. If you specify this parameter, you must
+ specify a USS file name.
+ The format options that are specified by using the setoutput command
+ apply to all commands in the script.
+
+command_string
+ Runs the specified command string outside of a CLI session.
+ Note: If you do not specify a command string, the wrapper program
+ use the default command defined in the program. If no command is
+ specified, the wrapper program cannot run the interactive console
+ and may fail

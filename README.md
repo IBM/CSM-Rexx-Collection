@@ -12,6 +12,10 @@ The purpose of this project is to provide Rexx examples to utilize IBM Copy Serv
 
 The [Rexx-CSMCLI-4-Site-Practice-Example](https://github.com/IBM/CSM-Rexx-Collection/tree/master/Rexx-CSMCLI-4-Site-Practice-Example) provides a Rexx executable to create a Practice copy for DR tests in a 4 Site Metro Mirror - Global Mirror session. It is the script that is documented in the White Paper [IBM Copy Services Manager Session automation.](https://www.ibm.com/support/pages/ibm-copy-services-manager-session-automation)
 
+## Rexx-CSMCLI-Wrapper
+
+The [Rexx-CSMCLI-Wrapper](https://github.com/IBM/CSM-Rexx-Collection/tree/master/Rexx-CSMCLI-Wrapper)  program is a wrapper for the CSMCLI executable program. Its primary goal is to provide a reliable program return code, to enable automation an easy indication whether a CSMCLI command was completed successfully or has resulted in a warning or error message code. The CSMCLI executable itself will always return RC=0 if the command was accepted by the CSM server, independent of the execution result. That makes it difficult for external automation flows to validate whether the CSMCLI was successfull. This Rexx wrapper will parse the responses for Error or Warning messages returned by executed commands and consolidate the findings in a program exit code. It will return RC=0 only if the issued command was accepted and the execution did not result in any Errors or Warnings.
+
 ## Rexx-Framework-CSM-Rest-Api
 
 The [z/OS Rexx framework for CSM Rest API](https://github.com/IBM/CSM-Rexx-Collection/tree/master/Rexx-Framework-CSM-Rest-Api) was developed to demonstrate the 
