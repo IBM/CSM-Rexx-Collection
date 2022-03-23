@@ -46,6 +46,8 @@
 /* 2021.12.27  T.Luther  Added CSM_RunHaCmd & CheckCsmCmdResp functions     */
 /*                       Added CSM_GetSessCpSets function, fixed -u parsing */
 /* 2022.01.11  T.Luther  Fixed default parms for CSM_GetSessCpSets          */
+/* 2022.03.23  T.Luther  Updated CSM_ Scheduled Task functions for CSM 6.3.2*/
+/*                       Added CSM_ConnOverview function (new in CSM 6.3.2) */
 /*--------------------------------------------------------------------------*/
 
 /*--------------------------------------------------------------------------*/
@@ -454,6 +456,7 @@ ParseArgs: procedure expose g.
       /* Allow only specific functions */
       functions = 'CSM_SessOverview(hdr,fmt,delim,sort)' ,
                   'CSM_SysOverview(hdr,fmt,delim,sort)' ,
+                  'CSM_ConnOverview(hdr,fmt,delim,sort)' ,
                   'CSM_PathOverview(hdr,fmt,delim,sort)' ,
                   'CSM_TaskOverview(hdr,fmt,delim,sort)' ,
                   'CSM_GetSysPaths(sys,hdr,fmt,delim,sort)' ,
@@ -815,6 +818,103 @@ return PrintTable(hdr,fmt,delim,g.cUri|| ,
        ' CSM storage device overview:' g.pout.0 'devices',sort)
 
 /*--------------------------------------------------------------------------*/
+/* Procedure: CSM_ConnOverview                                              */
+/*--------------------------------------------------------------------------*/
+/* Procedure to query & print formatted output of CSM storage & z/OS Host   */
+/* connection overview. Call requires CSM 6.3.2 or later.                   */
+/* The optional display options are Header ON(1) or OFF(0), Formatting      */
+/* ON(1) or OFF(0), delim char for field separation, sort options.          */
+/* Returns: 0 if Query and output OK, -1 if not                             */
+/*--------------------------------------------------------------------------*/
+CSM_ConnOverview: procedure expose g. (HWT_CONSTANTS)
+  parse arg hdr, fmt, delim, sort
+  /* Define default sort */
+  if sort = '' then
+    sort = '1,5'  /* Sort Type and Name ascending */
+  /* Measure elapsed time */
+  elapsec = Time(R) /* Reset timer */
+  /* Query CSM Connection overview */
+  g.reqType = 'GET'
+  g.reqPath = '/CSM/web/storagedevices/connectioninfo'
+  g.reqBody = ''
+  if g.ShowInfo | g.verbose then
+    say 'Querying CSM storage connections from' g.cUri '...'
+  if HTTP_sendRequest(g.reqType,g.reqPath,g.reqBody,g.outFile) <> 0 then
+  do
+    if g.resCode = '405' then
+      return fatalError('** Request requires CSM 6.3.2 or later **')
+    else
+      return fatalError('** Request failed **')
+  end
+  /* Parse the response to initialize the parser handle */
+  if JSON_parse(g.resBody) <> 0 then
+    return fatalError('** Error while parsing returned data **')
+
+  /* Expecting JSON with a root Array containing storage conneciion objects */
+  /* initialize global output stem for formatted device summary output */
+  call InitTable 'DevName, DevType, Vendor, Location, ConnType,'||,
+                 'IPs, LocState, RemState'
+  type = JSON_getType(0)  /* Obtain entry type of root object */
+  if type = HWTJ_ARRAY_TYPE then
+  do
+    /* get number of entries in the array  */
+    anum = JSON_getNumElem(0)
+    if anum < 0 then
+      return fatalError('** Number of elements in array not determined **')
+    if g.verbose then
+      say 'Found' anum 'elements in array'
+    /* for each array entry, process the json data type */
+    do aix = 0 by 1 while aix < anum
+      /* get next entry */
+      etok = JSON_getArrEntry(0,aix)
+      etype = JSON_getType(etok)
+      if etype = HWTJ_OBJECT_TYPE then
+      do
+        o = g.pout.0 + 1
+        /* get number of entries in the object */
+        onum = JSON_getNumElem(etok)
+        if onum < 0 then
+          return fatalError('** Number of elements in object not determined **')
+        if g.verbose then
+          say 'Found' onum 'elements in object' aix
+        /* search specific entries in the object */
+        if onum > 0 then
+        do
+          g.pout.o.1 = JSON_findValue(etok,'devicename',HWTJ_STRING_TYPE)
+          g.pout.o.2 = JSON_findValue(etok,'devicetype',HWTJ_STRING_TYPE)
+          g.pout.o.3 = JSON_findValue(etok,'manufacturer',HWTJ_STRING_TYPE)
+          g.pout.o.4 = JSON_findValue(etok,'location',HWTJ_STRING_TYPE)
+          g.pout.o.5 = JSON_findValue(etok,'conectiontype',HWTJ_STRING_TYPE)
+          /* Concatenate all possible IPs into single column */
+          ip = JSON_findValue(etok,'ip',HWTJ_STRING_TYPE)
+          if ip <> '' & left(ip,2) <> '(n' then
+            g.pout.o.6 = g.pout.o.6||ip','
+          ip = JSON_findValue(etok,'primaryip',HWTJ_STRING_TYPE)
+          if ip <> '' & left(ip,2) <> '(n' then
+            g.pout.o.6 = g.pout.o.6||ip','
+          ip = JSON_findValue(etok,'secondaryip',HWTJ_STRING_TYPE)
+          if ip <> '' & left(ip,2) <> '(n' then
+            g.pout.o.6 = g.pout.o.6||ip','
+          g.pout.o.6 = strip(g.pout.o.6,,',')
+          g.pout.o.7 = JSON_findValue(etok,'localstate',HWTJ_STRING_TYPE)
+          g.pout.o.8 = JSON_findValue(etok,'remotestate',HWTJ_STRING_TYPE)
+          /* Update column max values */
+          do j = 1 to g.pout.0.0
+            g.pout.0.j = max(g.pout.0.j,length(g.pout.o.j))
+          end
+        end
+        g.pout.0 = o
+      end
+    end
+  end
+  else
+    return fatalError('** Unexpected JSON type' JSON_getTypeName(type) ,
+                      'for storage connections query **')
+return PrintTable(hdr,fmt,delim,g.cUri|| ,
+       ' (Query:' format(time(R),,2) 'sec.):'|| ,
+       ' CSM storage connection overview:' g.pout.0 'connections',sort)
+
+/*--------------------------------------------------------------------------*/
 /* Procedure: CSM_PathOverview                                              */
 /*--------------------------------------------------------------------------*/
 /* Procedure to query & print formatted output of PPRC paths between        */
@@ -1058,7 +1158,16 @@ CSM_TaskOverview: procedure expose g. (HWT_CONSTANTS)
           g.pout.o.5 = ConvUnixTime(g.pout.o.5)
           /* Messages array */
           ae = JSON_findValue(etok,'messages',HWTJ_ARRAY_TYPE)
-          if ae <> '' then
+          if ae = '' | left(ae,2)='(n' then
+          do
+            /* messages list replaced by lastmessage in CSM 6.3.2 */
+            mesg = JSON_findValue(etok,'lastmessage',HWTJ_STRING_TYPE)
+            if mesg = '' | left(mesg,2)='(n' then
+              g.pout.o.7 = 0
+            else
+              g.pout.o.7 = 1
+          end
+          else
           do
             /* each array entry is msg object, sorted asc by timestamp */
             maxtime = 0
@@ -1096,8 +1205,6 @@ CSM_TaskOverview: procedure expose g. (HWT_CONSTANTS)
             */
             g.pout.o.7 = aenum
           end
-          else
-            g.pout.o.7 = 0
           /* Schedule object */
           oe = JSON_findValue(etok,'schedule',HWTJ_OBJECT_TYPE)
           if oe <> '' then
@@ -1174,7 +1281,7 @@ CSM_TaskOverview: procedure expose g. (HWT_CONSTANTS)
               atok = JSON_getArrEntry(ae,aeix)
               g.pout.o.10 = g.pout.o.10||JSON_getValEntry(atok)','
             end
-            g.pout.o.10 = left(g.pout.o.10,length(g.pout.o.10)-1)
+            g.pout.o.10 = strip(g.pout.o.10,'T',',')
           end
           else
             g.pout.o.10= 0
@@ -2102,8 +2209,8 @@ CSM_ShowTask: procedure expose g. (HWT_CONSTANTS)
                 if atype = HWTJ_OBJECT_TYPE then
                 do
                   o = o + 1
-                  g.pout.o.1 = ' *Action('right(aeix+1,digs,'0')')'
                   aonum = JSON_getNumElem(atok)
+                  actnum = aeix + 1
                   str = ''
                   do aoix = 0 by 1 while aoix < aonum
                     /* Get next object entry token and name */
@@ -2115,8 +2222,15 @@ CSM_ShowTask: procedure expose g. (HWT_CONSTANTS)
                       if datatype(oeval,'W') then
                         oeval = (oeval % 1000) % 60 'min'
                     end
+                    else if oename = "step" then
+                    do
+                      /* Skip step parm and update action number only */
+                      actnum = oeval
+                      iterate
+                    end
                     str = str||oename'='oeval','
                   end
+                  g.pout.o.1 = ' *Action('right(actnum,digs,'0')')'
                   g.pout.o.2 = strip(str,'T',',')
                 end
               end
@@ -2144,12 +2258,19 @@ CSM_ShowTask: procedure expose g. (HWT_CONSTANTS)
             g.pout.o.1 = 'LastRun'
             g.pout.o.2 = JSON_findValue(etok,'lastRan',HWTJ_NUMBER_TYPE)
             g.pout.o.2 = ConvUnixTime(g.pout.o.2)
-            /* Messages array */
+            /* Messages array or last message (CSM 6.3.2 or later) */
             o = o + 1
-            g.pout.o.1 = 'Messages'
             ae = JSON_findValue(etok,'messages',HWTJ_ARRAY_TYPE)
-            if ae <> '' then
+            if ae = '' | left(ae,2)='(n' then
             do
+              /* messages list removed since CSM 6.3.2 */
+              /* Print last message if found */
+              g.pout.o.1 = 'LastMessage'
+              g.pout.o.2 = JSON_findValue(etok,'lastmessage',HWTJ_STRING_TYPE)
+            end
+            else
+            do
+              g.pout.o.1 = 'Messages'
               /* each array entry is msg object, sorted asc by timestamp */
               aenum = JSON_getNumElem(ae)
               g.pout.o.2 = aenum
@@ -4180,7 +4301,6 @@ JSON_findValue: procedure expose g. (HWT_CONSTANTS)
   if resultType <> expectedType then
   do
     if g.verbose | g.showInfo then
-
       say "** Type mismatch for '"searchName"': "|| ,
           'Found' JSON_getTypeName(resultType)', '|| ,
           'Expected' JSON_getTypeName(expectedType)' **'

@@ -27,7 +27,7 @@ that greatly simplify the z/OS web enablement toolkit usage for CSM
 Rest API. For a generic usage description of the CSM Rest API, please 
 refer to:
 
-- https://www.ibm.com/docs/en/csm/6.3.1?topic=reference-csm-rest-api-documentation
+- https://www.ibm.com/docs/en/csm/6.3.2?topic=reference-csm-rest-api-documentation
 
 ----------------------------------------
 
@@ -190,6 +190,7 @@ and examples, please refer to the *zOS Rexx framework for CSM Rest API.pdf*:
    
    - **CSM_SessOverview**(*hdr*,*fmt*,*delim*,*sort*)
    - **CSM_SysOverview**(*hdr*,*fmt*,*delim*,*sort*)
+   - **CSM_ConnOverview**(*hdr*,*fmt*,*delim*,*sort*)
    - **CSM_PathOverview**(*hdr*,*fmt*,*delim*,*sort*)
    - **CSM_TaskOverview**(*hdr*,*fmt*,*delim*,*sort*)
    - **CSM_GetSysPaths**(**sys**,*hdr*,*fmt*,*delim*,*sort*)
@@ -240,4 +241,4 @@ of error conditions has not been shown or attempted, and this program has
 not been submitted to formal IBM testing. This program is distributed on an 
 'AS IS' basis without any warranties either expressed or implied.
 
-Copyright IBM Corporation  2021
+Copyright IBM Corporation  2022
