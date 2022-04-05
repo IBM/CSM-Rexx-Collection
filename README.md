@@ -1,7 +1,8 @@
 # CSM-Rexx-Collection
 
-[![Build Status](https://app.travis-ci.com/IBM/CSM-Rexx-Collection.svg?branch=master)](https://app.travis-ci.com/IBM/CSM-Rexx-Collection)
 
+[![Build Status](https://app.travis-ci.com/IBM/CSM-Rexx-Collection.svg?branch=master)](https://app.travis-ci.com/IBM/CSM-Rexx-Collection)
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/5903/badge)](https://bestpractices.coreinfrastructure.org/projects/5903)
 
 ## Scope
 
