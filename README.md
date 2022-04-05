@@ -1,5 +1,8 @@
 # CSM-Rexx-Collection
 
+[![Build Status](https://app.travis-ci.com/IBM/CSM-Rexx-Collection.svg?branch=master)](https://app.travis-ci.com/IBM/CSM-Rexx-Collection)
+
+
 ## Scope
 
 The purpose of this project is to provide Rexx examples to utilize IBM Copy Services Manager. Most examples focus on Rexx on IBM z, but some may be used also with other Rexx distributions on various platforms. 
